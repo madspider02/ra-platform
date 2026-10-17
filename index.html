@@ -240,11 +240,18 @@ function renderCases(root){
  const otherWrap=E('div',d.leadUnit==='其他'?'':'hidden');const lab=E('label','field-label','其他主責業務單位（請填寫）');lab.htmlFor='caseOtherUnit';const other=E('input');other.type='text';other.id='caseOtherUnit';other.maxLength=80;other.value=d.leadOther||'';other.placeholder='請輸入單位名稱';other.addEventListener('input',()=>updateCase('leadOther',other.value));append(otherWrap,lab,other);root.append(otherWrap);
  labeledField(root,'二、你建議討論哪些具體調整措施？','最多 550 字',d.measures,'例如：環境、課程、活動參與或行政協調的具體作法……',550,v=>updateCase('measures',v));
  root.append(E('h3','field-label','三、逐項確認合理調整的四個原則'));
- root.append(note('針對上面提出的調整措施，請對每項原則選擇「符合／尚待釐清／不符合」，並寫下判斷理由；若資料不足，可選「尚待釐清」並寫出需補充的資訊。'));
+ root.append(note('請判斷每項原則：選擇「符合」無須填寫理由；選擇「尚待釐清」或「不符合」時，請填寫判斷依據或需補充的資訊。'));
  PRINCIPLES.forEach((p,i)=>{
    const block=E('section','principle-card');append(block,E('h4','',`${i+1}. ${p.title}`),paragraph(p.prompt,'principle-prompt'));
-   const key=p.id+'Choice';caseChoice(block,p.title,d[key],JUDGMENTS,v=>updateCase(key,v));
-   labeledField(block,'你的判斷依據或需要釐清的資訊','最多 420 字',d[p.id+'Note'],'請簡要說明理由、需要哪些資料或可行的調整方向……',420,v=>updateCase(p.id+'Note',v));
+   const key=p.id+'Choice';
+   const reasonWrap=E('div',d[key]==='符合'?'hidden':'');
+   caseChoice(block,p.title,d[key],JUDGMENTS,v=>{
+     updateCase(key,v);
+     reasonWrap.classList.toggle('hidden',v==='符合');
+     if(v==='符合'){updateCase(p.id+'Note','');reasonInput.value='';}
+   });
+   const reasonInput=labeledField(reasonWrap,'你的判斷依據或需要釐清的資訊','選擇「尚待釐清」或「不符合」時必填，最多 420 字',d[p.id+'Note'],'請簡要說明理由或需要補充的資訊……',420,v=>updateCase(p.id+'Note',v));
+   block.append(reasonWrap);
    root.append(block);
  });
  labeledField(root,'四、這個案例在學校執行時，可能出現的爭議或困難在哪？（若無，可填無）','最多 850 字',d.dispute,'請思考對話協商、客觀書面理由、可行替代方案，以及申訴管道……',850,v=>updateCase('dispute',v));
@@ -254,9 +261,15 @@ function renderCases(root){
    if(!LEAD_UNITS.includes(x.leadUnit)){status.textContent='請先選擇主責業務單位。';status.classList.add('error');return}
    if(x.leadUnit==='其他'&&!x.leadOther.trim()){status.textContent='選擇「其他」時，請輸入單位名稱。';status.classList.add('error');return}
    if(!x.measures.trim()){status.textContent='請填寫預計討論的具體調整措施。';status.classList.add('error');return}
-   for(const p of PRINCIPLES){if(!JUDGMENTS.includes(x[p.id+'Choice'])||!x[p.id+'Note'].trim()){
-     status.textContent='請完整填寫「'+p.title+'」的判斷及理由。';status.classList.add('error');return
-   }}
+   for(const p of PRINCIPLES){
+     const choice=x[p.id+'Choice'];
+     if(!JUDGMENTS.includes(choice)){
+       status.textContent='請選擇「'+p.title+'」的判斷。';status.classList.add('error');return;
+     }
+     if(choice!=='符合'&&!(x[p.id+'Note']||'').trim()){
+       status.textContent='「'+p.title+'」選擇「'+choice+'」時，請填寫理由或需要釐清的資訊。';status.classList.add('error');return;
+     }
+   }
    if(!x.dispute.trim()){status.textContent='請填寫爭議處理的想法。';status.classList.add('error');return}
    const payload={caseId:STATE.caseId,...x};write('saveCase',payload,save,status,()=>render());
  });
@@ -315,7 +328,7 @@ function renderCaseResults(root,res){
    const measures=E('div','subanswer');append(measures,E('div','label','建議討論的具體調整措施'),E('div','answer-text',r.measures));append(card,lead,measures);
    PRINCIPLES.forEach(p=>{
      const sub=E('div','subanswer');const hd=E('div','principle-result-head');append(hd,E('span','label',p.title),E('span','judgment',r[p.id+'Choice']||'未填寫'));
-     append(sub,hd,E('div','answer-text',r[p.id+'Note']||'未填寫'));card.append(sub)
+     append(sub,hd,E('div','answer-text',r[p.id+'Choice']==='符合'?'無須填寫理由':(r[p.id+'Note']||'未填寫')));card.append(sub)
    });
    const dispute=E('div','subanswer');append(dispute,E('div','label','爭議處理'),E('div','answer-text',r.dispute));card.append(dispute);root.append(card)
  });
@@ -377,7 +390,7 @@ function makePersonalReport(m){
     card.append(E('div','pr-divider'));
     for(const p of PRINCIPLES){
       const answer=record[p.id+'Choice']||'';
-      reportLine(card,p.title,answer?`判斷：${answer}\n理由：${record[p.id+'Note']||'尚未填寫'}`:'');
+      reportLine(card,p.title,answer?(answer==='符合'?'判斷：符合':`判斷：${answer}\n理由：${record[p.id+'Note']||'尚未填寫'}`):'');
     }
     card.append(E('div','pr-divider'));
     reportLine(card,'執行時可能出現的爭議或困難',record.dispute);
