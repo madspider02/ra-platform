@@ -5,7 +5,7 @@
 <section id="resultView" class="hidden"><div class="panel"><div class="topline"><h2>全體票選結果</h2><button class="action secondary" id="back">返回填答</button></div><div class="stats"><div class="stat"><span class="muted">有效回應數</span><strong id="total">—</strong></div><div class="stat"><span class="muted">最多人選擇</span><strong id="leader" style="font-size:18px">—</strong></div></div><div id="bars"></div><p class="note">結果每 15 秒自動更新。</p></div><div class="panel"><h2>大家提出的宣導內容</h2><div id="filters" class="filters"></div><p id="resultStatus" class="muted" role="status"></p><div id="answers"></div></div></section><footer>合理調整宣導共思平台 · 匿名參與、共同交流</footer></main>
 <script>
 // 將下方網址改為部署後的 Google Apps Script Web App /exec 網址。
-const API_URL = 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL_HERE';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyFz3hUH4yGHPvxtYW0kdzNfPLFuzGpyAjunbxZqxzUpObXZGzVEePR6EenEtkrsT1DbQ/exec';
 const topics=['理論','流程','案例','申訴'];const icons=['⚖️','🔄','📖','💬'];const colors=['#77b5d4','#86b995','#e7a987','#c3a4d5'];let selected='',filter='全部',cache=[],refreshTimer=null,requestInFlight=false;
 const $=id=>document.getElementById(id);
 function configured(){return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(API_URL)}
