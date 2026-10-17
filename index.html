@@ -1,21 +1,253 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>合理調整宣導共思平台</title><style>
-:root{font-family:system-ui,-apple-system,'Noto Sans TC',sans-serif;color:#243749;background:#f4f8fc}*{box-sizing:border-box}body{margin:0}.wrap{max-width:850px;margin:36px auto;padding:0 18px}header{background:#dcecf6;border-radius:20px;padding:26px 30px;margin-bottom:20px}h1{font-size:clamp(23px,4vw,32px);margin:0 0 8px}header p{margin:0;line-height:1.7}.panel{background:white;border:1px solid #e1e9ef;border-radius:18px;padding:25px;margin-bottom:18px;box-shadow:0 3px 16px #25435a0a}h2{font-size:19px;margin:0 0 17px}.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.choice{display:flex;gap:12px;align-items:center;border:2px solid #dce6ef;border-radius:14px;padding:20px 14px;cursor:pointer;background:white;font:inherit;font-weight:650;color:inherit;text-align:left}.choice .emoji{font-size:28px}.choice[aria-pressed=true]{border-color:#3680ae;background:#edf7ff}.choice:hover{border-color:#7baac9}textarea{width:100%;min-height:150px;padding:14px;border:1px solid #cbd8e4;border-radius:12px;font:inherit;resize:vertical;line-height:1.6}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}button.action{background:#276f9b;color:white;border:0;border-radius:12px;padding:13px 22px;font:inherit;font-weight:700;cursor:pointer}button.action:disabled{opacity:.5;cursor:not-allowed}button.secondary{background:#e8f0f5;color:#275674}.muted{color:#647786;font-size:14px}.hidden{display:none!important}.status{min-height:24px;margin:12px 0 0}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:22px}.stat{background:#f1f7fb;border-radius:12px;padding:15px}.stat strong{display:block;font-size:24px}.barrow{margin:16px 0}.barhead{display:flex;justify-content:space-between;gap:8px;font-size:14px}.track{height:12px;border-radius:20px;background:#e8eef2;overflow:hidden;margin-top:7px}.fill{height:100%;border-radius:20px}.filters{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.filter{padding:8px 13px;border-radius:24px;border:1px solid #cddce8;background:white;cursor:pointer;font:inherit}.filter.active{background:#276f9b;color:white;border-color:#276f9b}.answer{border:1px solid #e2eaf0;border-radius:12px;padding:15px;margin:10px 0;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65}.tag{font-size:13px;font-weight:700;color:#276f9b;margin-bottom:6px}.topline{display:flex;justify-content:space-between;gap:10px;align-items:center}.note{font-size:13px;color:#627688}footer{text-align:center;color:#728594;font-size:13px;margin:24px 0}@media(max-width:550px){.wrap{margin:14px auto}.panel{padding:18px}.choice{padding:16px 10px}.choice .emoji{font-size:22px}.stats{grid-template-columns:1fr 1fr}}
-</style></head><body><main class="wrap"><header><h1>合理調整宣導討論平台</h1><p>如果要向學校人員宣導合理調整，你認為什麼最重要？（可條列出宣導重點）</p></header>
-<section id="formView"><div class="panel"><h2>1. 請選擇你認為最重要的宣導主題（單選）</h2><div class="choices" id="choices"></div></div><div class="panel"><h2 id="question">2. 在你選擇的主題下，應該向學校人員說明哪些內容？</h2><textarea id="content" maxlength="800" placeholder="請根據實務經驗，提出具體的宣導重點……"></textarea><p class="note">最多 800 字。回應將匿名公開在結果頁，請勿填寫學生或其他人的個人資料。</p><div class="actions"><button class="action" id="submit">送出回答</button><button class="action secondary" id="viewResults">查看大家的想法</button></div><p class="status muted" id="formStatus" role="status"></p></div></section>
-<section id="resultView" class="hidden"><div class="panel"><div class="topline"><h2>全體票選結果</h2><button class="action secondary" id="back">返回填答</button></div><div class="stats"><div class="stat"><span class="muted">有效回應數</span><strong id="total">—</strong></div><div class="stat"><span class="muted">最多人選擇</span><strong id="leader" style="font-size:18px">—</strong></div></div><div id="bars"></div><p class="note">結果每 15 秒自動更新。</p></div><div class="panel"><h2>大家提出的宣導內容</h2><div id="filters" class="filters"></div><p id="resultStatus" class="muted" role="status"></p><div id="answers"></div></div></section><footer>合理調整宣導共思平台 · 匿名參與、共同交流 · 製作者：國教院黃彥融副研究員</footer></main>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="light" />
+<title>合理調整宣導討論平台｜四區塊共思工作坊</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;color:#243749;background:#f4f8fc;--blue:#276f9b;--dark:#183c56;--muted:#647786;--line:#dbe6ee;--soft:#edf5fa;--shadow:0 5px 20px #25435a0a}
+*{box-sizing:border-box}body{margin:0;min-height:100vh}button,input,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.48;cursor:not-allowed}a{color:var(--blue)}:focus-visible{outline:3px solid #e4a347;outline-offset:3px}.hidden{display:none!important}.wrap{max-width:1050px;margin:24px auto;padding:0 18px}.hero{background:#dcecf6;border-radius:20px;padding:25px 28px 23px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-105px;top:-96px;background:#bcdbe9}.eyebrow{font-size:13px;font-weight:750;letter-spacing:.08em;color:#37698a}.hero h1{font-size:clamp(25px,4vw,34px);margin:6px 0 8px;color:#152f47;line-height:1.3}.hero p{margin:0;color:#3c607a;line-height:1.8;max-width:730px}.identity{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;padding:15px 4px 10px}.identity strong{font-size:15px}.muted{color:var(--muted)}.tiny{font-size:13px}.layout{display:grid;grid-template-columns:226px minmax(0,1fr);gap:16px;align-items:start}.nav{background:white;border:1px solid var(--line);border-radius:17px;padding:10px;box-shadow:var(--shadow);position:sticky;top:12px}.nav-head{font-size:12px;color:var(--muted);font-weight:700;padding:12px 12px 7px}.nav-btn{width:100%;display:flex;align-items:center;text-align:left;gap:11px;border:1px solid transparent;background:transparent;border-radius:11px;padding:12px 10px;color:#31495a}.nav-btn:hover{background:#f4f9fc}.nav-btn.active{background:#e8f3fa;border-color:#b5d9ed;color:#1c587e;font-weight:700}.nav-num{background:#e8eff4;border-radius:8px;padding:4px 6px;color:#507084;font-size:12px}.nav-btn.active .nav-num{background:#cae7f7;color:#205c7c}.nav-dot{margin-left:auto;color:#2d927a;font-size:18px;font-weight:900}.workspace{min-width:0}.panel{background:white;border:1px solid #e1e9ef;border-radius:18px;padding:24px;margin-bottom:16px;box-shadow:var(--shadow)}.panel h2{font-size:22px;margin:0 0 9px;color:#193f5b}.panel h3{font-size:17px;margin:0 0 10px}.intro{line-height:1.8;margin:2px 0 15px;color:#526d80;font-size:15px}.section-top{display:flex;gap:12px;flex-wrap:wrap;align-items:start;justify-content:space-between;margin-bottom:14px}.section-top>div:first-child{flex:1;min-width:240px}.seg{display:flex;gap:3px;background:#eaf2f7;padding:4px;border-radius:12px;align-self:start}.seg button{background:transparent;border:0;border-radius:9px;padding:9px 13px;color:#547082;font-weight:700;font-size:14px}.seg button.active{background:white;color:#205f86;box-shadow:0 1px 4px #1c56741a}.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.choice{display:flex;align-items:center;gap:11px;padding:17px;border:2px solid #dce6ef;border-radius:14px;background:white;color:inherit;text-align:left;font-weight:700}.choice:hover{border-color:#8ebad4}.choice[aria-pressed=true]{border-color:#3680ae;background:#edf7ff}.choice .symbol{font-size:24px}.check{margin-left:auto;color:#287aa6}.field-label{display:block;margin:19px 0 9px;font-size:15px;font-weight:750;color:#263f53}.field-label small{font-weight:400;color:#778894}.textbox,input[type=text],input[type=password]{width:100%;border:1px solid #bfced9;border-radius:11px;background:white;color:#223849;padding:12px 13px;line-height:1.65}.textbox{min-height:120px;resize:vertical}.textbox:focus,input:focus{border-color:#3680ae}.note{font-size:13px;color:#6b7c8b;line-height:1.75}.actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:17px}.action{border:0;background:var(--blue);color:white;padding:12px 19px;border-radius:11px;font-weight:750;min-height:43px}.action:hover:not(:disabled){background:#205c81}.action.secondary{background:#e7f0f6;color:#2e627f}.action.outline{border:1px solid #c8d8e3;background:white;color:#2f617c}.action.small{padding:8px 12px;min-height:34px;font-size:13px}.status{font-size:14px;color:#305d79;line-height:1.6;min-height:20px}.status.error{color:#b43a42}.pillrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.pill{border:1px solid #c9dce7;border-radius:100px;padding:9px 14px;background:white;color:#496678;font-weight:650;font-size:14px}.pill.active{background:#276f9b;color:white;border-color:#276f9b}.hint{border-left:3px solid #9cc5dd;background:#f5f9fc;padding:10px 13px;border-radius:0 10px 10px 0;font-size:14px;line-height:1.75;color:#48657a;margin:14px 0}.stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stage-tab{border:1px solid #dae5ec;border-radius:12px;text-align:left;padding:12px 11px;background:#fff;color:#4e6a7a;font-size:13px}.stage-tab strong{display:block;color:#254f6c;font-size:14px;line-height:1.5}.stage-tab.active{border:2px solid #4194bd;background:#edf7ff;padding:11px 10px}.stage-tab .done{color:#2c9573;font-weight:750}.case-menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.case-button{background:white;border:1px solid #d7e3eb;border-radius:12px;padding:12px;text-align:left;line-height:1.55;color:#294b63}.case-button.active{border:2px solid #3489b0;padding:11px;background:#eef7fc}.case-button span{display:block;font-size:12px;color:#6e8a9a}.case-story{margin-top:14px;padding:17px;background:#f5f8fa;border:1px solid #e4ebf0;border-radius:13px;line-height:1.85;font-size:15px}.case-story h3{margin:0 0 7px}.case-story p{margin:0}.reference{margin:17px 0 0;padding:12px 16px;background:#f5f8f4;border:1px solid #dcebdc;border-radius:12px;font-size:14px;line-height:1.8}.reference summary{cursor:pointer;font-weight:750;color:#32684f}.barrow{margin:14px 0}.barhead{display:flex;justify-content:space-between;gap:9px;font-size:14px;margin-bottom:6px}.track{background:#e9f0f4;height:11px;border-radius:12px;overflow:hidden}.fill{height:100%;border-radius:12px}.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.stat{background:#f0f7fb;border-radius:12px;padding:13px}.stat small{color:#697e8e}.stat strong{display:block;font-size:22px;color:#1f526f;margin-top:3px}.answer{border:1px solid #e0e8ee;border-radius:12px;padding:15px;margin:10px 0;background:white;line-height:1.8}.answer-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;margin-bottom:8px}.author{font-weight:750;color:#2d607d;font-size:14px}.time{color:#91a0ac;font-size:12px}.tag{display:inline-block;background:#eff6fb;color:#37769c;border-radius:100px;font-size:12px;padding:3px 9px;font-weight:700}.answer-text{white-space:pre-wrap;overflow-wrap:anywhere}.subanswer{border-top:1px dashed #e1e7ec;margin-top:12px;padding-top:10px}.subanswer .label{font-size:13px;color:#4b829f;font-weight:750}.empty{text-align:center;border:1px dashed #cfdee8;background:#f8fbfd;border-radius:13px;padding:24px;color:#718697}.qthread{border:1px solid #dfe8ee;border-radius:14px;background:white;margin:13px 0;padding:16px}.qcontent{font-size:16px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}.reply{background:#f5f9fb;border-radius:11px;margin-top:10px;padding:12px 14px}.reply .answer-text{font-size:14px}.replybox{margin-top:12px}.replybox textarea{min-height:80px}.inline-note{margin-left:6px;color:#7e91a0}.danger-link{border:0;background:transparent;color:#ad5055;font-size:12px;text-decoration:underline;padding:3px}.welcome{max-width:690px;margin:20px auto 0}.welcome h2{font-size:21px;color:#23445b;margin:0 0 12px}.welcome label{display:block;font-size:15px;font-weight:700;margin-bottom:8px}.welcome .flex{display:flex;flex-wrap:nowrap;gap:10px;align-items:center}.welcome .flex span{flex:1;min-width:0}.welcome input[type=checkbox]{width:19px;height:19px;accent-color:#276f9b}.divider{height:1px;background:#e1e9ed;margin:20px 0}.restore{background:#f6fafc;padding:16px;border-radius:12px}.identity strong{color:#23485f}.id-help{font-size:13px;color:#718697}.codebox{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:1px;border:1px solid #b8d0df;background:#f0f7fb;border-radius:9px;padding:10px 12px;display:inline-block;max-width:100%;word-break:break-all}.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:100;background:#244d66;color:white;padding:12px 18px;border-radius:12px;box-shadow:0 10px 25px #213c4b33;font-size:14px;max-width:90vw}.footer{text-align:center;color:#798c9a;font-size:13px;margin:22px 0 30px;line-height:1.8}
+@media(max-width:760px){.layout{display:block}.nav{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;margin:12px 0;padding:7px}.nav-head{display:none}.nav-btn{font-size:13px;padding:10px 7px}.nav-num{padding:3px}.panel{padding:18px}.case-menu,.stages{grid-template-columns:1fr}.case-button{padding:10px 13px}.case-button.active{padding:9px 12px}.stage-tab{padding:9px 11px}.stage-tab.active{padding:8px 10px}.hero{padding:22px 20px}.wrap{margin:12px auto}.seg{width:100%;justify-content:space-between}.seg button{flex:1}}
+@media(max-width:480px){.choices{grid-template-columns:1fr}.identity{align-items:start}.identity .actions{margin-top:0}.stats{gap:8px}.stat strong{font-size:19px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero"><div class="eyebrow">合理調整 · 現職教師工作坊</div><h1>合理調整宣導討論平台</h1><p>從宣導重點、學校運作、案例推演到常見問題，分成四個區塊一起思考如何落實合理調整。</p></header>
+  <section id="welcome" class="welcome hidden"></section>
+  <section id="app" class="hidden">
+    <div class="identity"><div><strong id="userName"></strong> <span class="id-help"> · 可分次回來完成四個區塊</span></div><div class="actions"><button class="action outline small" id="showCode">查看返回代碼</button><button class="action outline small" id="switchUser">切換參與者</button></div></div>
+    <div class="layout">
+      <nav id="nav" class="nav" aria-label="四個討論區塊"></nav>
+      <div class="workspace">
+        <section id="workArea" class="panel"></section>
+        <section id="resultArea" class="panel hidden"></section>
+      </div>
+    </div>
+  </section>
+  <footer class="footer">合理調整宣導共思平台 · 共同交流 · 製作者：國教院黃彥融副研究員<br>開放式討論用，請勿填寫學生姓名、醫療資訊或可辨識個案的細節。</footer>
+</main>
+<div id="toast" class="toast hidden" role="status"></div>
 <script>
-// 將下方網址改為部署後的 Google Apps Script Web App /exec 網址。
-const API_URL = 'https://script.google.com/macros/s/AKfycbyFz3hUH4yGHPvxtYW0kdzNfPLFuzGpyAjunbxZqxzUpObXZGzVEePR6EenEtkrsT1DbQ/exec';
-const topics=['理論','流程','案例','申訴'];const icons=['⚖️','🔄','📖','💬'];const colors=['#77b5d4','#86b995','#e7a987','#c3a4d5'];let selected='',filter='全部',cache=[],refreshTimer=null,requestInFlight=false;
+'use strict';
+// 沿用目前 GitHub 網站的 Apps Script 網址。請在同一部署作業選「新版本」即可保留 /exec 網址。
+const API_URL='https://script.google.com/macros/s/AKfycbyFz3hUH4yGHPvxtYW0kdzNfPLFuzGpyAjunbxZqxzUpObXZGzVEePR6EenEtkrsT1DbQ/exec';
+const STORE_KEY='ra_platform_v2_access_code';
+const TOPICS=['理論','流程','案例','申訴'];
+const ICONS=['⚖️','🔄','📖','💬'];
+const COLORS=['#77b5d4','#86b995','#e7a987','#c3a4d5'];
+const BLOCKS=[['宣導重點','如果要向學校人員宣導合理調整，你認為什麼最重要？（可條列出宣導重點）'],['學校運作','從申請、對話到追蹤，找出問題與所需資源。'],['案例推演','依參考指引案例，思考調整及爭議處理。'],['常見問題','提出疑問，也回應其他教師的提問。']];
+const STAGES=[{id:'1',title:'提起申請釐清狀況',hint:'受理窗口、學生聲音、障礙處境、資料佐證與個案需求。'},{id:'2',title:'對話討論確認措施',hint:'相關性、可行性、比例性，以及跨處室協作和替代方案。'},{id:'3',title:'執行調整追蹤檢討',hint:'分工執行、追蹤成效、修正調整及爭議處理。'}];
+const CASES=[
+ {id:'trip',title:'案例一｜畢業旅行怎麼一起去？',subtitle:'校外教學與交通安排',page:'參考指引案例 8（印刷頁 17–18）',story:'綱綱使用輪椅，家長希望畢業旅行時與原班同學搭乘同一部具輪椅升降設備的遊覽車。學校與旅行社協調後，擬以無障礙遊覽車為優先；若無法調度，改提供無障礙九人座車並安排部分同學同車。家長仍希望一定要全班同車。',guide:'指引中的協議以具輪椅升降設備的遊覽車為原則，若調度有困難則採無障礙九人座並安排同學陪同；活動當天最終成功調度無障礙遊覽車。討論重點：共同參與、交通可及性、替代方案與對話過程。'},
+ {id:'lights',title:'案例二｜需要換掉全校的燈嗎？',subtitle:'環境調整與比例性',page:'參考指引案例 9（印刷頁 18–19）',story:'小明有學習障礙，教室閃爍的燈光會造成眼部疲勞、影響課堂專注。家長希望全面更新全校教室照明，但學校表示短期內經費與工程量龐大。學校應如何回應這項合理調整請求？',guide:'指引最後由學校與家長達成共識，優先更換小明所在班級與兩間主要科任教室的照明設備，再視實際使用空間調整改善範圍。討論重點：調整需求的相關性、效果、比例性及可行替代方案。'},
+ {id:'writing',title:'案例三｜想用語音輸入交作業',subtitle:'請求與障礙需求的相關性',page:'參考指引案例 11（印刷頁 20–21）',story:'小林是學習障礙學生，核心困難是閱讀理解，而非書寫功能。小林與家長希望將書面作業改為使用語音轉文字軟體並以 Word 檔繳交。校方發現目前書寫速度、字跡及書寫能力沒有明顯困難。你會如何評估並回應？',guide:'指引依據現有鑑定及作業資料，判斷這項語音輸入請求與所描述的障礙困難缺乏直接相關性，因此未採該項調整；學校仍持續提供學習策略支持，並保留未來新需求重新評估的可能。討論重點：調整請求與具體障礙的相關性、書面說明及持續支持。'}
+];
 const $=id=>document.getElementById(id);
-function configured(){return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(API_URL)}
-function jsonp(params){return new Promise((resolve,reject)=>{if(!configured())return reject(Error('請先在 index.html 設定 Apps Script 網址。'));const cb='ra_cb_'+Date.now()+'_'+Math.floor(Math.random()*1e6);const script=document.createElement('script');const timeout=setTimeout(()=>finish(Error('連線逾時，請重試。')),12000);function finish(err,data){clearTimeout(timeout);delete window[cb];script.remove();err?reject(err):resolve(data)}window[cb]=data=>finish(null,data);script.onerror=()=>finish(Error('無法連接後台，請檢查網址及部署權限。'));script.src=API_URL+'?'+new URLSearchParams({...params,callback:cb,nonce:Date.now()}).toString();document.head.appendChild(script)})}
-function renderChoices(){$('choices').replaceChildren();topics.forEach((t,i)=>{const b=document.createElement('button');b.className='choice';b.type='button';b.setAttribute('aria-pressed',String(selected===t));const e=document.createElement('span');e.className='emoji';e.textContent=icons[i];const name=document.createElement('span');name.textContent='合理調整的'+t;b.append(e,name);b.onclick=()=>{selected=t;renderChoices();$('question').textContent='2. 在「合理調整的'+t+'」這個主題下，你認為應該向學校人員說明哪些內容？'};$('choices').append(b)})}
-function showResults(){location.hash='results'}function navigate(){const isResults=location.hash==='#results';$('formView').classList.toggle('hidden',isResults);$('resultView').classList.toggle('hidden',!isResults);clearInterval(refreshTimer);if(isResults){loadResults();refreshTimer=setInterval(loadResults,15000)}}
-$('submit').onclick=async()=>{const content=$('content').value.trim();if(!selected){$('formStatus').textContent='請先選擇一個主題。';return}if(!content){$('formStatus').textContent='請填寫宣導內容。';return}if(content.length>800){$('formStatus').textContent='回答請勿超過 800 字。';return}if(sessionStorage.getItem('ra_submitted')){ $('formStatus').textContent='這個分頁已經提交過。請前往結果頁觀看。';return}const btn=$('submit');btn.disabled=true;$('formStatus').textContent='正在提交，請稍候……';try{const res=await jsonp({action:'submit',topic:selected,content});if(!res.ok)throw Error(res.error||'提交失敗');sessionStorage.setItem('ra_submitted','1');$('formStatus').textContent='提交成功！';showResults()}catch(e){$('formStatus').textContent=e.message}finally{btn.disabled=false}};
-$('viewResults').onclick=showResults;$('back').onclick=()=>location.hash='form';window.addEventListener('hashchange',navigate);
-function renderFilters(){const el=$('filters');el.replaceChildren();['全部',...topics].forEach(t=>{const b=document.createElement('button');b.className='filter'+(filter===t?' active':'');b.textContent=t==='全部'?'全部主題':'合理調整的'+t;b.onclick=()=>{filter=t;renderFilters();renderAnswers()};el.append(b)})}
-function renderAnswers(){const el=$('answers');el.replaceChildren();const rows=cache.filter(r=>filter==='全部'||r.topic===filter);$('resultStatus').textContent=rows.length+' 筆回應';if(!rows.length){const p=document.createElement('p');p.className='muted';p.textContent='目前尚無回應。';el.append(p)}rows.forEach(r=>{const card=document.createElement('div');card.className='answer';const tag=document.createElement('div');tag.className='tag';tag.textContent='合理調整的'+r.topic;const body=document.createElement('div');body.textContent=r.content;card.append(tag,body);el.append(card)})}
-async function loadResults(){if(requestInFlight)return;requestInFlight=true;try{const res=await jsonp({action:'results'});if(!res.ok)throw Error(res.error||'讀取失敗');cache=Array.isArray(res.rows)?res.rows:[];const counts=topics.map(t=>cache.filter(r=>r.topic===t).length),total=cache.length;$('total').textContent=total;const max=Math.max(...counts);$('leader').textContent=total?('合理調整的'+topics[counts.indexOf(max)]):'尚無資料';const bars=$('bars');bars.replaceChildren();topics.forEach((t,i)=>{const wrap=document.createElement('div');wrap.className='barrow';const top=document.createElement('div');top.className='barhead';const left=document.createElement('span');left.textContent='合理調整的'+t;const right=document.createElement('span');right.textContent=counts[i]+' 人（'+(total?Math.round(counts[i]/total*100):0)+'%）';top.append(left,right);const track=document.createElement('div');track.className='track';const fill=document.createElement('div');fill.className='fill';fill.style.background=colors[i];fill.style.width=(total?counts[i]/total*100:0)+'%';track.append(fill);wrap.append(top,track);bars.append(wrap)});renderFilters();renderAnswers()}catch(e){$('resultStatus').textContent=e.message}finally{requestInFlight=false}}
-renderChoices();navigate();
-</script></body></html>
+const STATE={code:'',profile:null,mine:null,section:1,mode:'form',stage:'1',caseId:'trip',introTopic:'',introContent:'',processDrafts:{},caseDrafts:{},filter:'全部',results:{},loading:false,resultBusy:false,timer:null,toastTimer:null};
+function E(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n}
+function append(parent,...children){children.forEach(ch=>parent.append(ch));return parent}
+function paragraph(text,cls){return E('p',cls||'',text)}
+function button(text,fn,cls){const b=E('button',cls||'action',text);b.type='button';b.addEventListener('click',fn);return b}
+function labelText(t,small=''){const n=E('label','field-label',t);if(small)n.append(E('small','',` ${small}`));return n}
+function field(value,placeholder,limit,onInput){const t=E('textarea','textbox');t.value=value||'';t.placeholder=placeholder;t.maxLength=limit;t.addEventListener('input',()=>onInput(t.value));return t}
+let fieldIdCounter=0;
+function labeledField(root,title,small,value,placeholder,limit,onInput){
+ const lab=labelText(title,small),t=field(value,placeholder,limit,onInput);t.id='raField_'+(++fieldIdCounter);lab.htmlFor=t.id;root.append(lab,t);return t;
+}
+function note(text){return paragraph(text,'note')}
+function actions(...items){return append(E('div','actions'),...items)}
+function showToast(s){$('toast').textContent=s;$('toast').classList.remove('hidden');clearTimeout(STATE.toastTimer);STATE.toastTimer=setTimeout(()=>$('toast').classList.add('hidden'),4000)}
+function isConfigured(){return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(API_URL)}
+let requestNo=0;
+function api(params){return new Promise((resolve,reject)=>{
+  if(!isConfigured())return reject(new Error('請先設定 Apps Script 網址。'));
+  const cb='ra_cb_'+Date.now()+'_'+(++requestNo);const s=document.createElement('script');let done=false;
+  const timer=setTimeout(()=>finish(new Error('連線逾時，請檢查 Apps Script 部署設定。')),18000);
+  function finish(err,data){if(done)return;done=true;clearTimeout(timer);delete window[cb];s.remove();err?reject(err):resolve(data)}
+  window[cb]=data=>{if(data&&data.ok)finish(null,data);else finish(new Error(data&&data.error||'後台處理失敗'))};
+  s.onerror=()=>finish(new Error('連線失敗，請檢查網址及部署權限。'));
+  s.src=API_URL+'?'+new URLSearchParams({...params,callback:cb,nonce:Date.now()}).toString();document.head.append(s);
+})}
+// 文字內容透過 POST 傳送；等待 Apps Script 寫入回條，成功後才對參與者顯示已儲存。
+async function apiWrite(params){
+  if(!isConfigured())throw new Error('請先設定 Apps Script 網址。');
+  const receiptId=(crypto.randomUUID?crypto.randomUUID().replace(/-/g,''):(Date.now().toString(36)+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2)));
+  const body=JSON.stringify({...params,receiptId});
+  try{await fetch(API_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body,redirect:'follow'})}
+  catch(_){throw new Error('未能連接寫入服務，請檢查網路後重試。')}
+  for(let i=0;i<15;i++){
+    await new Promise(resolve=>setTimeout(resolve,i<4?600:1100));
+    try{
+      const res=await api({action:'receipt',receiptId});
+      if(res.ready){if(!res.success)throw new Error(res.message||'寫入失敗');return {ok:true,message:res.message||'已儲存'}}
+    }catch(err){if(err.message&&err.message!=='連線逾時，請檢查 Apps Script 部署設定。')throw err}
+  }
+  throw new Error('尚未收到後台確認。請先到「大家的想法」查看是否已寫入，避免重複提交。');
+}
+function storageGet(){try{return localStorage.getItem(STORE_KEY)||''}catch(_){return ''}}
+function storageSet(code){try{localStorage.setItem(STORE_KEY,code)}catch(_){}}
+function storageClear(){try{localStorage.removeItem(STORE_KEY)}catch(_){}}
+function draftKey(){return 'ra_drafts_'+STATE.code}
+function saveDrafts(){try{localStorage.setItem(draftKey(),JSON.stringify({introTopic:STATE.introTopic,introContent:STATE.introContent,processDrafts:STATE.processDrafts,caseDrafts:STATE.caseDrafts}))}catch(_){}}
+function readDrafts(){try{const x=JSON.parse(localStorage.getItem(draftKey())||'{}');if(x&&typeof x==='object'){STATE.introTopic=x.introTopic||'';STATE.introContent=x.introContent||'';STATE.processDrafts=x.processDrafts||{};STATE.caseDrafts=x.caseDrafts||{}}}catch(_){}}
+function applyMine(){const m=STATE.mine||{};
+ if(m.intro&&!STATE.introContent){STATE.introTopic=m.intro.topic;STATE.introContent=m.intro.content}
+ (m.process||[]).forEach(x=>{if(!STATE.processDrafts[x.stage]||!STATE.processDrafts[x.stage].problem)STATE.processDrafts[x.stage]={problem:x.problem,resources:x.resources}});
+ (m.cases||[]).forEach(x=>{if(!STATE.caseDrafts[x.caseId]||!STATE.caseDrafts[x.caseId].approach)STATE.caseDrafts[x.caseId]={approach:x.approach,dispute:x.dispute}});
+}
+function setView(section,mode){location.hash='s'+section+(mode==='results'?'-results':'')}
+function decodeHash(){const m=location.hash.match(/^#s([1-4])(-results)?$/);return m?{section:Number(m[1]),mode:m[2]?'results':'form'}:{section:1,mode:'form'}}
+function navFromHash(){const x=decodeHash();STATE.section=x.section;STATE.mode=x.mode;render();if(x.mode==='results')loadResults();else if(x.section===4)loadResults()}
+function renderWelcome(){
+ $('app').classList.add('hidden');$('welcome').classList.remove('hidden');const root=$('welcome');root.replaceChildren();
+ const card=E('div','panel');append(card,E('h2','', '加入工作坊討論'),paragraph('請使用方便現場互相稱呼的名字或暱稱，也可以選擇匿名。建立身分後，四個區塊可分次填寫。','intro'));
+ const nameLabel=E('label','', '你的姓名或暱稱');nameLabel.htmlFor='joinName';const name=E('input');name.type='text';name.id='joinName';name.maxLength=30;name.placeholder='例：王老師、阿明（最多 30 字）';
+ const anonLabel=E('label','flex');const anon=E('input');anon.type='checkbox';anonLabel.style.fontWeight='normal';append(anonLabel,anon,E('span','', '使用系統產生的匿名名稱（例如：匿名老師・A1B2）'));
+ anon.addEventListener('change',()=>{name.disabled=anon.checked;if(anon.checked)name.value='' });
+ const info=note('你填寫的顯示名稱及文字回答將公開於全體結果頁。請勿輸入學生姓名、病歷或其他足以辨識個案的資訊。');const st=E('p','status');
+ const join=button('開始參與',async()=>{if(!anon.checked&&!name.value.trim()){st.textContent='請填寫稱呼，或勾選匿名參與。';return}join.disabled=true;st.textContent='正在建立參與者資料……';try{const res=await api({action:'register',name:name.value.trim(),anon:anon.checked?'1':'0'});storageSet(res.code);await enterWithCode(res.code);showCodeDialog(true)}catch(e){st.textContent=e.message;st.classList.add('error')}finally{join.disabled=false}});
+ append(card,nameLabel,name,anonLabel,info,actions(join),st);
+ const box=E('div','restore');append(box,E('h3','', '之前填過？繼續上次的進度'),note('同一瀏覽器會自動記住進度；如果換裝置，可以輸入先前保存的返回代碼。'));
+ const returnCode=E('input');returnCode.type='text';returnCode.placeholder='輸入返回代碼（24 碼）';returnCode.autocomplete='off';returnCode.maxLength=40;returnCode.setAttribute('aria-label','返回代碼');
+ const rStatus=E('p','status');const restore=button('恢復我的填答',async()=>{const value=returnCode.value.trim().replace(/\s/g,'');if(!value){rStatus.textContent='請輸入返回代碼。';return}restore.disabled=true;rStatus.textContent='正在讀取進度……';try{await enterWithCode(value)}catch(e){rStatus.textContent=e.message;rStatus.classList.add('error')}finally{restore.disabled=false}},'action secondary');
+ append(box,returnCode,actions(restore),rStatus);
+ append(card,E('div','divider'),box);
+ append(root,card);
+ const browse=E('div','panel');append(browse,E('h3','', '只想先看看大家的想法？'),note('可先進入結果頁，但發布或回覆前仍須建立參與身分。'),actions(button('瀏覽全體討論',()=>{STATE.code='';$('welcome').classList.add('hidden');$('app').classList.remove('hidden');setView(1,'results');navFromHash()},'action outline')));root.append(browse);
+}
+async function enterWithCode(code){
+ const res=await api({action:'mine',code});STATE.code=code.trim().toUpperCase();STATE.profile=res.profile;STATE.mine=res;STATE.introTopic='';STATE.introContent='';STATE.processDrafts={};STATE.caseDrafts={};readDrafts();applyMine();storageSet(STATE.code);
+ $('welcome').classList.add('hidden');$('app').classList.remove('hidden');navFromHash();showToast('歡迎回來，'+STATE.profile.name);
+}
+function showCodeDialog(initial){if(!STATE.code)return;const code=STATE.code;
+ const overlay=E('div');overlay.style.cssText='position:fixed;inset:0;background:#17364f99;z-index:101;display:grid;place-items:center;padding:20px';
+ const panel=E('div','panel');panel.style.cssText='max-width:480px;width:100%;margin:0';append(panel,E('h2','',initial?'請保存你的返回代碼':'你的返回代碼'),paragraph('同一瀏覽器會自動保留進度。若更換手機或電腦，輸入以下代碼即可繼續填寫。','intro'),E('div','codebox',code),note('返回代碼可操作你的填答，請自行妥善保存，不要分享給其他人。'));
+ const copy=button('複製代碼',async()=>{try{await navigator.clipboard.writeText(code);showToast('已複製返回代碼')}catch(_){showToast('請長按或選取代碼複製')}});
+ append(panel,actions(copy,button('知道了',()=>overlay.remove(),'action secondary')));overlay.append(panel);overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});document.body.append(overlay);
+}
+function renderNav(){const el=$('nav');el.replaceChildren(E('div','nav-head','工作坊四個區塊'));
+ BLOCKS.forEach((x,i)=>{const n=i+1;const b=E('button','nav-btn'+(STATE.section===n?' active':''));b.type='button';const done=!!STATE.mine&&(n===1?!!STATE.mine.intro:n===2?STATE.mine.process.length===3:n===3?STATE.mine.cases.length>0:STATE.mine.questions.length>0);append(b,E('span','nav-num',String(n).padStart(2,'0')),E('span','',x[0]));if(done)b.append(E('span','nav-dot','✓'));b.onclick=()=>setView(n,'form');el.append(b)})
+}
+function render(){
+ if(!STATE.code&&!STATE.profile&&STATE.mode==='form'){renderWelcome();return}
+ $('welcome').classList.add('hidden');$('app').classList.remove('hidden');$('userName').textContent=STATE.profile?STATE.profile.name:'訪客瀏覽';$('showCode').classList.toggle('hidden',!STATE.code);
+ renderNav();const area=$('workArea');area.replaceChildren();const heading=E('div','section-top');const info=E('div');append(info,E('h2','',`區塊 ${STATE.section}｜${BLOCKS[STATE.section-1][0]}`),paragraph(BLOCKS[STATE.section-1][1],'intro'));heading.append(info);
+ const seg=E('div','seg');const formBtn=button('我的填答',()=>setView(STATE.section,'form'),'');const resultBtn=button('大家的想法',()=>setView(STATE.section,'results'),'');formBtn.className=STATE.mode==='form'?'active':'';resultBtn.className=STATE.mode==='results'?'active':'';append(seg,formBtn,resultBtn);heading.append(seg);area.append(heading);
+ $('resultArea').classList.toggle('hidden',STATE.mode!=='results');
+ if(STATE.mode==='form'){
+   if(!STATE.code){area.append(note('要填寫或回覆，請先加入工作坊。'),actions(button('前往建立參與身分',()=>{STATE.profile=null;renderWelcome()})));return}
+   if(STATE.section===1)renderIntro(area);
+   if(STATE.section===2)renderProcess(area);
+   if(STATE.section===3)renderCases(area);
+   if(STATE.section===4)renderAsk(area);
+ }else{area.append(note('回應公開展示；現場可使用「重新整理」或等待每 20 秒自動更新。'));}
+ if(STATE.section===4&&STATE.mode==='form'){
+   const inline=$('resultArea');inline.classList.remove('hidden');inline.replaceChildren(E('h3','', '大家提出的問題與回覆'),note('可在此直接回覆其他教師。'));renderResultContent(inline,4)
+ }
+}
+function formStatus(container){const n=E('p','status');n.setAttribute('role','status');container.append(n);return n}
+async function write(action,payload,btn,status,after){if(STATE.loading)return;STATE.loading=true;btn.disabled=true;status.classList.remove('error');status.textContent='正在儲存，請稍候……';try{const res=await apiWrite({action,code:STATE.code,...payload});status.textContent=res.message||'已儲存';showToast(res.message||'已儲存');await refreshMine();if(after)after(res)}catch(e){status.textContent=e.message;status.classList.add('error')}finally{STATE.loading=false;btn.disabled=false}}
+async function refreshMine(){try{const m=await api({action:'mine',code:STATE.code});STATE.profile=m.profile;STATE.mine=m;renderNav()}catch(_){}}
+function renderIntro(root){
+ append(root,E('h3','', '1. 你認為哪個主題最重要？（單選）'));
+ const choices=E('div','choices');TOPICS.forEach((t,i)=>{const b=E('button','choice');b.type='button';b.setAttribute('aria-pressed',String(t===STATE.introTopic));append(b,E('span','symbol',ICONS[i]),E('span','',`合理調整的${t}`));if(t===STATE.introTopic)b.append(E('span','check','✓'));b.addEventListener('click',()=>{STATE.introTopic=t;saveDrafts();renderIntroFresh()});choices.append(b)});root.append(choices);
+ root.append(labelText('2. 在這個主題下，應該向學校人員說明哪些內容？','最多 800 字'));
+ const t=field(STATE.introContent,'請根據實務經驗，寫出你認為值得宣導的重點……',800,v=>{STATE.introContent=v;saveDrafts()});root.append(t);
+ root.append(note('填寫內容與你選擇的名稱會呈現在全體結果頁。再次儲存將更新原答案，不重複計票。'));
+ const stat=E('p','status');const save=button(STATE.mine&&STATE.mine.intro?'更新我的回答':'儲存我的回答',()=>write('saveIntro',{topic:STATE.introTopic,content:STATE.introContent.trim()},save,stat));root.append(actions(save,button('查看票選與回答',()=>setView(1,'results'),'action secondary')),stat);
+}
+function renderIntroFresh(){const root=$('workArea');root.replaceChildren();const head=E('div','section-top');const info=E('div');append(info,E('h2','', '區塊 1｜宣導重點'),paragraph(BLOCKS[0][1],'intro'));head.append(info);const seg=E('div','seg');append(seg,button('我的填答',()=>setView(1,'form'),'active'),button('大家的想法',()=>setView(1,'results'),''));head.append(seg);root.append(head);renderIntro(root)}
+function getProcessDraft(){return STATE.processDrafts[STATE.stage]||{problem:'',resources:''}}
+function renderProcess(root){
+ root.append(E('h3','', '合理調整的三個階段'));
+ const tabs=E('div','stages');STAGES.forEach(s=>{const saved=!!STATE.mine&&(STATE.mine.process||[]).some(x=>x.stage===s.id);const b=E('button','stage-tab'+(STATE.stage===s.id?' active':''));b.type='button';append(b,E('span','',`階段 ${s.id}`),E('strong','',s.title));if(saved)b.append(E('span','done','✓ 已儲存'));b.onclick=()=>{STATE.stage=s.id;render()};tabs.append(b)});root.append(tabs);
+ const cur=STAGES.find(s=>s.id===STATE.stage);root.append(paragraph(cur.hint,'hint'));
+ const d=getProcessDraft();labeledField(root,'A. 在這個階段，學校可能產生什麼問題？','最多 650 字',d.problem,'請具體描述可能遇到的行政、教學、溝通或權益問題……',650,v=>{STATE.processDrafts[STATE.stage]??={problem:'',resources:''};STATE.processDrafts[STATE.stage].problem=v;saveDrafts()});
+ labeledField(root,'B. 為了處理這些問題，學校可能需要哪些資源？','最多 650 字',d.resources,'請思考所需人力、專業支持、行政協調、經費或資訊……',650,v=>{STATE.processDrafts[STATE.stage]??={problem:'',resources:''};STATE.processDrafts[STATE.stage].resources=v;saveDrafts()});
+ root.append(note('三個階段分別儲存，可在休息後繼續填寫，也可以修改已提交的內容。'));
+ const status=E('p','status');const save=button('儲存這個階段',()=>{const x=getProcessDraft();write('saveProcess',{stage:STATE.stage,problem:x.problem.trim(),resources:x.resources.trim()},save,status)});
+ root.append(actions(save,button('看這個階段的討論',()=>setView(2,'results'),'action secondary')),status)
+}
+function getCaseDraft(){return STATE.caseDrafts[STATE.caseId]||{approach:'',dispute:''}}
+function renderCases(root){
+ root.append(E('h3','', '選擇一個案例來討論'));
+ const menu=E('div','case-menu');CASES.forEach(c=>{const b=E('button','case-button'+(STATE.caseId===c.id?' active':''));b.type='button';append(b,E('strong','',c.title),E('span','',c.subtitle));b.onclick=()=>{STATE.caseId=c.id;render()};menu.append(b)});root.append(menu);
+ const c=CASES.find(c=>c.id===STATE.caseId);const story=E('div','case-story');append(story,E('h3','',c.title),paragraph(c.story),note(c.page));root.append(story);
+ const d=getCaseDraft();labeledField(root,'1. 如果你是學校人員，會如何評估並落實合理調整？','最多 850 字',d.approach,'請思考學生需求、相關性、可行性、比例性及學校合作方式……',850,v=>{STATE.caseDrafts[STATE.caseId]??={approach:'',dispute:''};STATE.caseDrafts[STATE.caseId].approach=v;saveDrafts()});
+ labeledField(root,'2. 如果家長、學生與學校對調整方式有爭議，你會如何處理？','最多 850 字',d.dispute,'請思考對話、書面說明、替代方案、追蹤及申訴權益……',850,v=>{STATE.caseDrafts[STATE.caseId]??={approach:'',dispute:''};STATE.caseDrafts[STATE.caseId].dispute=v;saveDrafts()});
+ root.append(note('案例情境摘述自教育部 114 年 8 月《各教育階段學校及幼兒園提供合理調整參考指引》，實際措施仍應依個別需要評估。'));
+ const status=E('p','status');const save=button('儲存我的案例判斷',()=>{const x=getCaseDraft();write('saveCase',{caseId:STATE.caseId,approach:x.approach.trim(),dispute:x.dispute.trim()},save,status,()=>render())});
+ root.append(actions(save,button('看大家如何處理',()=>setView(3,'results'),'action secondary')),status);
+ const saved=!!STATE.mine&&(STATE.mine.cases||[]).some(x=>x.caseId===STATE.caseId);
+ if(saved){const det=E('details','reference');append(det,E('summary','', '展開：參考指引中的實際處理方式'),paragraph(c.guide));root.append(det)}
+}
+function renderAsk(root){
+ append(root,E('h3','', '你對合理調整還有哪些疑問？'),paragraph('可以提出校園中遇到的常見問題；其他教師可以在下方開放回覆。','intro'));
+ const ta=field('','例如：如果家長要求的調整措施與學校評估不同，應該如何溝通？',450,()=>{});root.append(ta);
+ root.append(note('問題會顯示你的公開名稱。請以去識別化方式描述，不要輸入特定學生的姓名或健康資訊。'));
+ const stat=E('p','status');const save=button('發布問題',()=>write('ask',{content:ta.value.trim()},save,stat,()=>{ta.value='';loadResults()}));
+ root.append(actions(save,button('重新整理討論',loadResults,'action secondary')),stat)
+}
+function resultStatus(root,msg,cls){const el=E('p','status '+(cls||''),msg);root.append(el);return el}
+async function loadResults(){const n=STATE.section;if(STATE.resultBusy)return;STATE.resultBusy=true;const root=$('resultArea');if(!root)return;
+ try{const res=await api({action:'results',section:n});STATE.results[n]=res;if(STATE.section===n&&(STATE.mode==='results'||n===4)){
+   if(n===4&&root.querySelector('textarea:focus'))return;renderResultContent(root,n);
+ }}catch(e){if(STATE.section===n&&(STATE.mode==='results'||n===4)){root.replaceChildren();resultStatus(root,e.message,'error')}}finally{STATE.resultBusy=false}}
+function publicCard(name,at,tagName){const card=E('article','answer');const head=E('div','answer-head');const left=E('div');append(left,E('span','author',name||'匿名老師'));if(tagName)left.append(E('span','inline-note',tagName));append(head,left,E('span','time',formatTime(at)));card.append(head);return card}
+function formatTime(iso){const d=new Date(iso);return isNaN(d.getTime())?'':new Intl.DateTimeFormat('zh-TW',{timeZone:'Asia/Taipei',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(d)}
+function renderResultContent(root,n){root.replaceChildren();if(STATE.mode==='form'&&n===4)append(root,E('h3','', '大家提出的問題與回覆'),note('可閱讀提問，也可以在每個問題下方公開回覆。'));
+ else root.append(E('h3','', '全體討論結果'));
+ const res=STATE.results[n];if(!res){root.append(E('p','muted','正在讀取回應……'));return}
+ root.append(actions(button('重新整理',loadResults,'action outline small')));
+ if(n===1)renderIntroResults(root,res);
+ if(n===2)renderProcessResults(root,res);
+ if(n===3)renderCaseResults(root,res);
+ if(n===4)renderQAResults(root,res)
+}
+function renderIntroResults(root,res){
+ const stats=E('div','stats');const total=E('div','stat');append(total,E('small','', '已填答人數'),E('strong','',res.total||0));const top=E('div','stat');const counts=res.counts||[0,0,0,0];const mx=Math.max(...counts);append(top,E('small','', '最多人選擇'),E('strong','',res.total?('合理調整的'+TOPICS[counts.indexOf(mx)]):'尚無回應'));append(stats,total,top);root.append(stats);
+ TOPICS.forEach((t,i)=>{const line=E('div','barrow');const head=E('div','barhead');append(head,E('span','',`合理調整的${t}`),E('span','',`${counts[i]||0} 人（${res.total?Math.round(counts[i]/res.total*100):0}%）`));const track=E('div','track');const fill=E('div','fill');fill.style.background=COLORS[i];fill.style.width=(res.total?counts[i]/res.total*100:0)+'%';track.append(fill);append(line,head,track);root.append(line)});
+ const filters=E('div','pillrow');['全部',...TOPICS].forEach(t=>{const b=button(t==='全部'?'全部回應':'合理調整的'+t,()=>{STATE.filter=t;renderResultContent(root,1)},'pill'+(STATE.filter===t?' active':''));filters.append(b)});root.append(filters);
+ const rows=(res.rows||[]).filter(r=>STATE.filter==='全部'||r.topic===STATE.filter);root.append(note(`顯示 ${rows.length} 筆回答。內容可供全體共同討論。`));if(!rows.length)root.append(E('div','empty','目前尚無回應。'));
+ rows.forEach(r=>{const card=publicCard(r.name,r.at,'合理調整的'+r.topic);card.append(E('div','answer-text',r.content));root.append(card)})
+}
+function renderProcessResults(root,res){
+ const filters=E('div','pillrow');STAGES.forEach(s=>{filters.append(button('階段 '+s.id+'｜'+s.title,()=>{STATE.stage=s.id;renderResultContent(root,2)},'pill'+(STATE.stage===s.id?' active':'')))});root.append(filters);
+ const rows=(res.rows||[]).filter(r=>r.stage===STATE.stage);root.append(note('第 '+STATE.stage+' 階段，共 '+rows.length+' 筆回應。'));
+ if(!rows.length)root.append(E('div','empty','這個階段尚無人提交。'));
+ rows.forEach(r=>{const card=publicCard(r.name,r.at);const a=E('div','subanswer');append(a,E('div','label','學校可能發生的問題'),E('div','answer-text',r.problem));const b=E('div','subanswer');append(b,E('div','label','需要的資源'),E('div','answer-text',r.resources));append(card,a,b);root.append(card)})
+}
+function renderCaseResults(root,res){
+ const filters=E('div','pillrow');CASES.forEach(c=>filters.append(button(c.title.split('｜')[0],()=>{STATE.caseId=c.id;renderResultContent(root,3)},'pill'+(STATE.caseId===c.id?' active':''))));root.append(filters);
+ const c=CASES.find(c=>c.id===STATE.caseId);root.append(paragraph(c.title,'hint'));
+ const rows=(res.rows||[]).filter(r=>r.caseId===STATE.caseId);root.append(note('這個案例共有 '+rows.length+' 筆回答。'));
+ if(!rows.length)root.append(E('div','empty','目前尚無案例判斷。'));
+ rows.forEach(r=>{const card=publicCard(r.name,r.at);const a=E('div','subanswer');append(a,E('div','label','如何評估及落實調整'),E('div','answer-text',r.approach));const b=E('div','subanswer');append(b,E('div','label','發生爭議時如何處理'),E('div','answer-text',r.dispute));append(card,a,b);root.append(card)});
+ const det=E('details','reference');append(det,E('summary','', '展開：參考指引的處理方式'),paragraph(c.guide),note(c.page));root.append(det)
+}
+function renderQAResults(root,res){
+ const qs=res.questions||[],replies=res.replies||[];root.append(note('目前有 '+qs.length+' 個公開問題、'+replies.length+' 則公開回覆。'));
+ if(!qs.length){root.append(E('div','empty','目前還沒有人提問。'));return}
+ qs.forEach((q,i)=>{
+ const thread=E('article','qthread');const head=E('div','answer-head');append(head,E('div','author',`${i+1}. ${q.name}`),E('span','time',formatTime(q.at)));thread.append(head,E('div','qcontent',q.content));
+ const owned=!!STATE.mine&&(STATE.mine.questions||[]).includes(q.questionId);
+ if(owned)thread.append(button('撤回我的問題',()=>withdraw('withdrawQuestion',{questionId:q.questionId}),'danger-link'));
+ const under=replies.filter(r=>r.questionId===q.questionId);
+ under.forEach(r=>{const card=E('div','reply');const header=E('div','answer-head');append(header,E('span','author',r.name),E('span','time',formatTime(r.at)));append(card,header,E('div','answer-text',r.content));
+ if(STATE.mine&&(STATE.mine.replies||[]).includes(r.replyId))card.append(button('撤回回覆',()=>withdraw('withdrawReply',{replyId:r.replyId}),'danger-link'));
+ thread.append(card)});
+ if(STATE.code){const replyBox=E('div','replybox');const replyText=field('','我會如何回應這個問題……',600,()=>{});replyText.setAttribute('aria-label','回覆問題 '+(i+1));const status=E('p','status');const post=button('送出回覆',()=>write('reply',{questionId:q.questionId,content:replyText.value.trim()},post,status,()=>{replyText.value='';loadResults()}),'action secondary small');append(replyBox,replyText,actions(post),status);thread.append(replyBox)}
+ root.append(thread)
+ })
+}
+async function withdraw(action,p){if(!confirm('確定要撤回此內容嗎？撤回後將不再公開顯示。'))return;try{await apiWrite({action,code:STATE.code,...p});showToast('已撤回內容');await refreshMine();await loadResults()}catch(e){showToast(e.message)}}
+function startPolling(){clearInterval(STATE.timer);STATE.timer=setInterval(()=>{if(!document.hidden&&(STATE.mode==='results'||STATE.section===4))loadResults()},20000)}
+$('showCode').onclick=()=>showCodeDialog(false);
+$('switchUser').onclick=()=>{if(!confirm('切換參與者會清除本裝置自動登入。請先保存返回代碼，以便日後恢復。'))return;storageClear();STATE.code='';STATE.profile=null;STATE.mine=null;STATE.mode='form';location.hash='s1';renderWelcome()};
+window.addEventListener('hashchange',navFromHash);
+(async()=>{startPolling();const remembered=storageGet();if(remembered){try{await enterWithCode(remembered)}catch(_){storageClear();STATE.code='';STATE.profile=null;renderWelcome()}}else renderWelcome()})();
+</script>
+</body>
+</html>
